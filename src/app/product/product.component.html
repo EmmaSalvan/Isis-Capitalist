@@ -1,0 +1,8 @@
+<div>
+    <span id="productquantite"> {{product.quantite}} </span>
+    <img (click)="startFabrication()" class="logo" [attr.src]="server+product.logo" />
+    <span id="productname"> {{product.name}} </span>
+    <mat-progress-bar class="progressbar" max="100" [value]="progressbarvalue"></mat-progress-bar>
+    <div><button>Buy $<span id="productcout"> {{product.cout}} </span></button></div>
+</div>
+
