@@ -14,7 +14,7 @@ export class AppComponent {
   product: Product = new Product();
   pallier: Pallier = new Pallier();
   server: string;
-  //buttonBuy : ;
+  qtmulti: number = 1; 
   constructor(private service: RestserviceService) {
     this.server = service.getServer(); 
     service.getWorld().then(
@@ -28,10 +28,28 @@ export class AppComponent {
     this.world.score = this.world.score + p.revenu;
   }
 
-  //changeQuantity(){
-  //  if (document.getElementById(this.buttonBuy)?.innerHTML == "Buy x1" {
-  //    document.getElementById(buttonBuy)?.innerHTML = "Buy x10";
-  //  }
-  //}
+// Changement de la valeur du bouton Buy pour l'achat de produits (soit 1 soit 10 soit 100 soit max)
+  changeQuantity(){
+     switch (this.qtmulti) {
+      case 1:
+        this.qtmulti = 10
+        break;
+      case 10:
+        this.qtmulti = 100
+        break;
+      case 100:
+        this.qtmulti = 1000
+        break;
+      default:
+        this.qtmulti = 1
+    } 
+}
+
+onBuy(coutBuy : number){
+  console.log("coucou");
+  this.world.money -= coutBuy;
+  this.world.score -= coutBuy;
+}
+
 }
 

@@ -5,7 +5,10 @@
       <span id="worldname"> {{world.name}} </span>
     </div>
     <div>$<span [innerHTML]="world.money | bigvalue"> </span></div>
-    <!--<div> <button type="button" id="buttonBuy" (click)="changeQuantity()">Buy x1</button> </div>-->
+    <div> 
+      <button type="button" id="buttonBuy" *ngIf="qtmulti!=1000" (click)="changeQuantity()"><span>Buy x</span><span>{{qtmulti}}</span></button> 
+      <button type="button" id="buttonBuy" *ngIf="qtmulti==1000" (click)="changeQuantity()"><span>Buy </span><span>max</span></button>
+    </div>
     <div>Votre ID<input type="text"></div>
   </div>
 
@@ -18,11 +21,11 @@
       <button type="button">Investors</button>
     </div>
     <div class="product">
-      <div><app-product [prod]="world.products.product[0]" class="product col-md-6" (notifyProduction)="onProductionDone($event)"></app-product></div>
-      <div><app-product [prod]="world.products.product[1]" class="product col-md-6" (notifyProduction)="onProductionDone($event)"></app-product></div>
-      <div><app-product [prod]="world.products.product[2]" class="product col-md-6" (notifyProduction)="onProductionDone($event)"></app-product></div>
-      <div><app-product [prod]="world.products.product[3]" class="product col-md-6" (notifyProduction)="onProductionDone($event)"></app-product></div>
-      <div><app-product [prod]="world.products.product[4]" class="product col-md-6" (notifyProduction)="onProductionDone($event)"></app-product></div>
-      <div><app-product [prod]="world.products.product[5]" class="product col-md-6" (notifyProduction)="onProductionDone($event)"></app-product></div>
+      <div><app-product [prod]="world.products.product[0]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
+      <div><app-product [prod]="world.products.product[1]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
+      <div><app-product [prod]="world.products.product[2]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
+      <div><app-product [prod]="world.products.product[3]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
+      <div><app-product [prod]="world.products.product[4]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
+      <div><app-product [prod]="world.products.product[5]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
     </div>
   </div>

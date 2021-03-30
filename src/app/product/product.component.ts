@@ -1,7 +1,7 @@
 import { EventEmitter, Input, Output } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { RestserviceService } from '../restservice.service';
-import { Product } from '../world';
+import { Product, World } from '../world';
 
 @Component({
   selector: 'app-product',
@@ -13,27 +13,42 @@ export class ProductComponent implements OnInit {
   server: string;
   progressbarvalue: number = 0; 
   lastupdate : number = 0;
+  coutBuy : number = 0;
+
+//Récupére la valeur de qtmulti
+  _qtmulti: number = 0;
   @Input()
-  set qtmulti(value: string) {
-  this.qtmulti = value;
-  if (this.qtmulti && this.product) this.calcMaxCanBuy(); 
+  set qtmulti(value: number) {
+  this._qtmulti = value;
+  if (this._qtmulti == 1000) {
+   this._qtmulti = this.calcMaxCanBuy();
+  }
 }
+
+//Récupere le produit
   @Input()
   set prod(value: Product) {
     this.product = value;
   }
+
+//Récupére l'argent du monde
+  _money: number =0;
   @Input()
   set money(value: number) {
-    this.money = value;
+    this._money = value;
   }
-  @Output() notifyProduction: EventEmitter<Product> = new
-  EventEmitter<Product>();
+
+  @Output() notifyProduction: EventEmitter<Product> = new EventEmitter<Product>();
+
+  @Output() onBuy : EventEmitter<number> = new EventEmitter<number>();
+
   constructor(private service: RestserviceService) {
     this.server = service.getServer();
   }
   ngOnInit(): void {
   }
 
+// Commence la fabrication d'un produit
   startFabrication(){
     //this.product.quantite=this.product.quantite + 1;
     //this.progressbarvalue=100;
@@ -57,8 +72,26 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  calcMaxCanBuy(){
-    
+  //Calcule le maximum de produit que l'on peut acheter avec l'argent
+  calcMaxCanBuy() : number{
+    let qtmax : number = 0;
+    if (this.product.cout * this.product.croissance <= this._money) {
+      let qt = (Math.log((this.product.cout - (this._money * (1 - this.product.croissance))) / this.product.cout)) / Math.log(this.product.croissance);
+      qtmax = Math.floor(qt);
+      if (qtmax < 0) {
+      qtmax = 0;
+      }
   }
+  return qtmax;
 }
 
+// Achète le produit 
+buyProduct(){
+  this.coutBuy = this._qtmulti * this.product.cout;
+  this.product.cout = this.product.cout * this.product.croissance ** this._qtmulti;
+  this.product.revenu = (this.product.revenu / this.product.quantite) * (this.product.quantite + this._qtmulti);
+  this.product.quantite = this.product.quantite + this._qtmulti;
+  this.onBuy.emit(this.coutBuy);
+}
+
+}
