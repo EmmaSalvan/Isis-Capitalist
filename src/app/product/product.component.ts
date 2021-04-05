@@ -88,10 +88,9 @@ export class ProductComponent implements OnInit {
 // Achète le produit 
 buyProduct(){
   this.coutBuy = this._qtmulti * this.product.cout;
-  this.product.cout = this.product.cout * this.product.croissance ** this._qtmulti;
+  this.product.cout = Math.round(this.product.cout * this.product.croissance ** this._qtmulti*100)/100;
   this.product.revenu = (this.product.revenu / this.product.quantite) * (this.product.quantite + this._qtmulti);
   this.product.quantite = this.product.quantite + this._qtmulti;
   this.onBuy.emit(this.coutBuy);
 }
-
 }

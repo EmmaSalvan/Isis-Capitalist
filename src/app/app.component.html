@@ -2,9 +2,9 @@
   <div class="header">
     <div>
       <img class="logo" [attr.src]="server+world.logo" />
-      <span id="worldname"> {{world.name}} </span>
+      <span class="worldname"> {{world.name}} </span>
     </div>
-    <div>$<span [innerHTML]="world.money | bigvalue"> </span></div>
+    <div class= "money">$<span [innerHTML]="world.money | bigvalue"> </span></div>
     <div> 
       <button type="button" id="buttonBuy" *ngIf="qtmulti!=1000" (click)="changeQuantity()"><span>Buy x</span><span>{{qtmulti}}</span></button> 
       <button type="button" id="buttonBuy" *ngIf="qtmulti==1000" (click)="changeQuantity()"><span>Buy </span><span>max</span></button>
@@ -12,20 +12,47 @@
     <div>Votre ID<input type="text"></div>
   </div>
 
-  <div class="main">
-    <div>
-      <button type="button">Unlocks</button>
-      <button type="button">Cash Upgrades</button>
-      <button type="button">Angel Upgrades</button>
-      <button type="button">Managers</button>
-      <button type="button">Investors</button>
-    </div>
-    <div class="product">
-      <div><app-product [prod]="world.products.product[0]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
-      <div><app-product [prod]="world.products.product[1]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
-      <div><app-product [prod]="world.products.product[2]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
-      <div><app-product [prod]="world.products.product[3]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
-      <div><app-product [prod]="world.products.product[4]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
-      <div><app-product [prod]="world.products.product[5]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
-    </div>
+<div class="main">
+  <div class=listebouton>
+    <ul style="list-style-type:none;">
+    <li><button type="button" id="b">Unlocks</button></li>
+    <li><button type="button" id="b">Cash Upgrades</button></li>
+    <li><button type="button" id="b">Angel Upgrades</button></li>
+    <li><button type="button" id="b" (click)="pageManagers()">Managers</button></li>
+    <li><button type="button" id="b">Investors</button></li>
+    </ul>
   </div>
+  <div class="product">
+    <div><app-product [prod]="world.products.product[0]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
+    <div><app-product [prod]="world.products.product[1]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
+    <div><app-product [prod]="world.products.product[2]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
+    <div><app-product [prod]="world.products.product[3]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
+    <div><app-product [prod]="world.products.product[4]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
+    <div><app-product [prod]="world.products.product[5]" [qtmulti]="qtmulti" [money]="world.money" class="product col-md-6" (notifyProduction)="onProductionDone($event)" (onBuy)="onBuy($event)"></app-product></div>
+  </div>
+</div>
+
+<div *ngIf="showManagers" class="modal">
+  <div><h1 class="title">Managers make you feel better !</h1></div>
+  <div>
+    <div *ngFor="let manager of world.managers.pallier">
+      <div *ngIf="!manager.unlocked" class="managerslayout">
+        <div>
+          <div class="logo"><img class="round" [attr.src]="server+manager.logo" /> </div>
+        </div>
+        <div>
+          <div class="managername"> {{ manager.name}} </div>
+          <!--<div class="managercible"> {{ world.products.product[manager.idcible].name }} </div> -->
+          <div class="managercost"> {{ manager.seuil}} </div>
+        </div>
+        <div>
+          <!--<div class="hirebutton" (click)="hireManager(manager)" [ngClass]="{'selectable' : (world.money >= manager.seuil)}">Hire !</div> -->
+        </div>
+      </div>
+    </div>
+    <button class="closebutton" mat-raisedbutton color="primary" (click)="showManagers = !showManagers">Close</button>
+  </div>
+</div>
+<footer class= "foot">
+  <p>Développé par Nourrisson Marie et Salvan Emma</p>
+</footer>

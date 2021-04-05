@@ -1,6 +1,11 @@
 .header {
     display: grid;
     grid-template-columns: 25% 25% 30% 20%; 
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: #03224c;
+}
+.worldname{
+    font-size: 25px;
 }
 
 .main {
@@ -8,12 +13,44 @@
     grid-template-columns: 20% 80%; 
 }
 
+#b{
+    padding: 20px;
+    float: left;
+}
+
+button {
+    display: inline-block;
+    background-color: #03224c;
+    border-radius: 10px;
+    color: #eeeeee;
+    text-align: center;
+    font-size: 15px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    padding: 5px;
+    width: 150px;
+    cursor: pointer;
+    margin: 5px;
+    }
+
 .product { 
     display: grid;
     grid-template-columns: 1fr 1fr; 
+    padding-bottom: 50px
 }
 
 .logo {
     width: 100px;
     height: auto;
 }
+
+.modal {
+    position: fixed; /* reste en place */
+    z-index: 2; /* au dessus du reste */
+    width: 800px; /* largeur */
+    height: 800px; /* hauteur */
+    overflow: auto; /* barre de scroll si besoin */
+    background-color: white; /* opaque */
+    border: solid;
+    top:10; /* a 10% du haut */
+    left:20%; /* a 20% de la gauche */
+ }

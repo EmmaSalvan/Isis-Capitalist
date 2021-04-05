@@ -14,7 +14,8 @@ export class AppComponent {
   product: Product = new Product();
   pallier: Pallier = new Pallier();
   server: string;
-  qtmulti: number = 1; 
+  qtmulti: number = 1;
+  showManagers : boolean = false;
   constructor(private service: RestserviceService) {
     this.server = service.getServer(); 
     service.getWorld().then(
@@ -50,6 +51,12 @@ onBuy(coutBuy : number){
   this.world.money -= coutBuy;
   this.world.score -= coutBuy;
 }
+pageManagers(){
+  this.showManagers = true;
+}
 
+hireManager(){
+
+}
 }
 
