@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { RestserviceService } from './restservice.service';
 import { World, Product, Pallier } from './world';
 
@@ -16,12 +17,16 @@ export class AppComponent {
   server: string;
   qtmulti: number = 1;
   showManagers : boolean = false;
-  constructor(private service: RestserviceService) {
+  constructor(private service: RestserviceService, private snackBar: MatSnackBar) {
     this.server = service.getServer(); 
     service.getWorld().then(
       world => {
         this.world = world;
       });
+  } 
+
+  popMessage(message : string) : void {
+    this.snackBar.open(message, "", { duration : 2000 })
   }
 
   onProductionDone(p : Product){
@@ -55,7 +60,17 @@ pageManagers(){
   this.showManagers = true;
 }
 
-hireManager(){
+hireManager(manager : Pallier){
+  if(this.world.money >= manager.seuil){
+    this.world.managers.pallier[this.world.managers.pallier.indexOf(manager)].unlocked = true;
+    this.world.products.product.forEach(element => {
+      if (manager.idcible == element.id) {
+        this.world.products.product[this.world.products.product.indexOf(element)].managerUnlocked = true;
+      }
+    });
+    this.world.money = this.world.money - manager.seuil;
+    
+  }
 
 }
 }

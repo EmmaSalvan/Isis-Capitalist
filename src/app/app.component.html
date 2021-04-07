@@ -32,7 +32,7 @@
   </div>
 </div>
 
-<div *ngIf="showManagers" class="modal">
+<div *ngIf="showManagers == true" class="modal">
   <div><h1 class="title">Managers make you feel better !</h1></div>
   <div>
     <div *ngFor="let manager of world.managers.pallier">
@@ -42,15 +42,15 @@
         </div>
         <div>
           <div class="managername"> {{ manager.name}} </div>
-          <!--<div class="managercible"> {{ world.products.product[manager.idcible].name }} </div> -->
+          <!--div class="managercible"> {{ world.products.product[manager.idcible].name }} </div> -->
           <div class="managercost"> {{ manager.seuil}} </div>
         </div>
         <div>
-          <!--<div class="hirebutton" (click)="hireManager(manager)" [ngClass]="{'selectable' : (world.money >= manager.seuil)}">Hire !</div> -->
+          <button type ="button" [disabled] = " manager.seuil > world.money" class="hirebutton" (click)="hireManager(manager)" [ngClass]="{'selectable' : (world.money >= manager.seuil)}">Hire !</button>
         </div>
       </div>
     </div>
-    <button class="closebutton" mat-raisedbutton color="primary" (click)="showManagers = !showManagers">Close</button>
+    <button class="closebutton" mat-raisedbutton color="primary" (click)="showManagers = false">Close</button>
   </div>
 </div>
 <footer class= "foot">

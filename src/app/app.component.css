@@ -11,6 +11,15 @@
 .main {
     display: grid;
     grid-template-columns: 20% 80%; 
+    position: absolute;
+    z-index: 1;
+}
+.foot{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    padding-top:50px;
+    height:50px;
 }
 
 #b{
@@ -18,7 +27,7 @@
     float: left;
 }
 
-button {
+#b {
     display: inline-block;
     background-color: #03224c;
     border-radius: 10px;
@@ -44,7 +53,7 @@ button {
 }
 
 .modal {
-    position: fixed; /* reste en place */
+    position: absolute; /* reste en place */
     z-index: 2; /* au dessus du reste */
     width: 800px; /* largeur */
     height: 800px; /* hauteur */
@@ -53,4 +62,4 @@ button {
     border: solid;
     top:10; /* a 10% du haut */
     left:20%; /* a 20% de la gauche */
- }
+}
