@@ -18,7 +18,9 @@
     <li><button type="button" id="b">Unlocks</button></li>
     <li><button type="button" id="b">Cash Upgrades</button></li>
     <li><button type="button" id="b">Angel Upgrades</button></li>
-    <li><button type="button" id="b" (click)="pageManagers()">Managers</button></li>
+    <li><button type="button" id="b" color="primary" 
+      [matBadge]="badgeManagers"
+      [matBadgeHidden]="badgeManagers==0"  (click)="pageManagers()">Managers</button></li>
     <li><button type="button" id="b">Investors</button></li>
     </ul>
   </div>
@@ -42,7 +44,7 @@
         </div>
         <div>
           <div class="managername"> {{ manager.name}} </div>
-          <!--div class="managercible"> {{ world.products.product[manager.idcible].name }} </div> -->
+          <div class="managercible"> {{world.products.product[manager.idcible].name }} </div>
           <div class="managercost"> {{ manager.seuil}} </div>
         </div>
         <div>
