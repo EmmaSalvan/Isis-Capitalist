@@ -9,6 +9,7 @@ import { ProductComponent } from './product/product.component';
 import { BigvaluePipe } from './bigvalue.pipe';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatBadgeModule} from '@angular/material/badge';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {MatBadgeModule} from '@angular/material/badge';
     BrowserAnimationsModule,
     MatProgressBarModule,
     MatSnackBarModule,
-    MatBadgeModule
+    MatBadgeModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

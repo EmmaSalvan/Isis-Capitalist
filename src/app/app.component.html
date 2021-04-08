@@ -9,7 +9,7 @@
       <button type="button" id="buttonBuy" *ngIf="qtmulti!=1000" (click)="changeQuantity()"><span>Buy x</span><span>{{qtmulti}}</span></button> 
       <button type="button" id="buttonBuy" *ngIf="qtmulti==1000" (click)="changeQuantity()"><span>Buy </span><span>max</span></button>
     </div>
-    <div>Votre ID<input type="text"></div>
+    <div>Votre ID<input type="text" [(ngModel)]="username" (change)="onUsernameChanged()"/></div>
   </div>
 
 <div class="main">
@@ -44,7 +44,7 @@
         </div>
         <div>
           <div class="managername"> {{ manager.name}} </div>
-          <div class="managercible"> {{world.products.product[manager.idcible].name }} </div>
+          <div class="managercible"> {{world.products.product[manager.idcible-1].name }} </div>
           <div class="managercost"> {{ manager.seuil}} </div>
         </div>
         <div>

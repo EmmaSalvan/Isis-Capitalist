@@ -95,5 +95,6 @@ buyProduct(){
   this.product.revenu = (this.product.revenu / this.product.quantite) * (this.product.quantite + this._qtmulti);
   this.product.quantite = this.product.quantite + this._qtmulti;
   this.onBuy.emit(this.coutBuy);
+  this.service.putProduit(this.product);
 }
 }
