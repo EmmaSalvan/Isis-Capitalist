@@ -28,6 +28,7 @@ export class AppComponent {
   showUpgrades: boolean = false;
   showUnlocks: boolean = false;
   qtmax: number = 0;
+  qtmin: number = 0;
 
   username: string = '';
 
@@ -42,6 +43,7 @@ export class AppComponent {
 
   ngOnInit(): void {
     setInterval(() => {
+      this.allUnlocks();
     }, 1000);
   }
 
@@ -152,6 +154,7 @@ export class AppComponent {
         }
       });
       this.world.money = this.world.money - upgrade.seuil;
+    
       this.popMessage(upgrade.name + " acheté!");
       this.badgeManagersDispo();
       this.badgeUpgradesDispo();
@@ -159,5 +162,17 @@ export class AppComponent {
     }
   }
 
+//On va voir si tout les produits vérifient la condition pour appliquer un allupdate
+  allUnlocks(){
+    this.qtmin = Math.min(...this.world.products.product.map(element => element.quantite))
+    console.log(this.qtmin);
+    this.world.allunlocks.pallier.map(element => {
+      if (!element.unlocked && this.qtmin >= element.seuil) {
+        this.world.allunlocks.pallier[this.world.allunlocks.pallier.indexOf(element)].unlocked = true;
+        this.productsComponent.forEach(produit => produit.calcUpgrade(element))
+        this.popMessage(element.name + " appliqué sur tous les produits!");
+      }
+    })
+  }
 }
 

@@ -98,6 +98,18 @@
         </div>
       </div>
     </div>
+    <div *ngFor="let unlock of world.allunlocks.pallier">
+        <div *ngIf="!unlock.unlocked" class="unlockslayout">
+          <div>
+            <div class="logo"><img class="round" [attr.src]="server+unlock.logo" /> </div>
+          </div>
+          <div>
+            <div class="unlockname"> {{unlock.name}} </div>
+            <div class="unlockcost"> Il faut {{unlock.seuil}} pour chaque produits </div>
+            <div class="unlockratio"> {{unlock.typeratio}} x {{unlock.ratio}}</div>
+          </div>
+        </div>
+    </div>
     <button class="closebutton" mat-raisedbutton color="primary" (click)="showUnlocks = false">Close</button>
   </div>
 </div>
