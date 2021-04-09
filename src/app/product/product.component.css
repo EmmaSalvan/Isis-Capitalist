@@ -22,3 +22,7 @@ button {
     width: wrap-content;
     margin: 5px;
 }
+
+.progressbar {
+    color: #FFEA82;
+}

@@ -1,7 +1,8 @@
 import { EventEmitter, Input, Output } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { RestserviceService } from '../restservice.service';
-import { Product, World } from '../world';
+import { Pallier, Product, World } from '../world';
 
 @Component({
   selector: 'app-product',
@@ -11,90 +12,145 @@ import { Product, World } from '../world';
 export class ProductComponent implements OnInit {
   product: Product = new Product;
   server: string;
-  progressbarvalue: number = 0; 
-  lastupdate : number = 0;
-  coutBuy : number = 0;
+  estFabrique: boolean = false;
+  progressbarvalue: number = 0;
+  lastupdate: number = 0;
+  coutBuy: number = 0;
 
-//Récupére la valeur de qtmulti
-  _qtmulti: number = 0;
-  @Input()
-  set qtmulti(value: number) {
+// On récupére la valeur de qtmulti
+_qtmulti: number = 0;
+@Input()
+set qtmulti(value: number) {
   this._qtmulti = value;
   if (this._qtmulti == 1000) {
-   this._qtmulti = this.calcMaxCanBuy();
+    this._qtmulti = this.calcMaxCanBuy();
   }
 }
 
-//Récupere le produit
-  @Input()
-  set prod(value: Product) {
-    this.product = value;
+_qtmax: number = 0;
+@Input()
+set qtmax(value: number) {
+  this._qtmax = value;
+}
+
+
+// On récupere le produit du monde
+@Input()
+set prod(value: Product) {
+  this.product = value;
+  //if (this.product && this.product.timeleft > 0) {
+    //this.lastupdate = Date.now();
+    //let progress = (this.product.vitesse - this.product.timeleft) / this.product.vitesse;
+    //this.progressbar.set(progress);
+    //this.progressbar.animate(1, { duration: this.product.timeleft });
+  //}
+}
+
+// On récupére l'argent du monde
+_money: number = 0;
+@Input()
+set money(value: number) {
+  this._money = value;
+}
+
+
+// On envoie le produit qui est produit
+@Output() notifyProduction: EventEmitter < Product > = new EventEmitter<Product>();
+
+// On envoie le coût du produit acheté
+@Output() onBuy: EventEmitter < number > = new EventEmitter<number>();
+
+constructor(private service: RestserviceService, private snackBar: MatSnackBar) {
+  this.server = service.getServer();
+}
+ngOnInit(): void {
+  setInterval(() => {
+  this.calcScore();
+  if (this._qtmulti == 1000) {
+    this._qtmax = this.calcMaxCanBuy();
+    console.log(this.qtmax);
+  }
+}, 1000);
   }
 
-//Récupére l'argent du monde
-  _money: number =0;
-  @Input()
-  set money(value: number) {
-    this._money = value;
-  }
-
-  @Output() notifyProduction: EventEmitter<Product> = new EventEmitter<Product>();
-
-  @Output() onBuy : EventEmitter<number> = new EventEmitter<number>();
-
-  constructor(private service: RestserviceService) {
-    this.server = service.getServer();
-  }
-  ngOnInit(): void {
-  }
-
-// Commence la fabrication d'un produit
-  startFabrication(){
-    //this.product.quantite=this.product.quantite + 1;
-    //this.progressbarvalue=100;
+// On commence la fabrication d'un produit s'il n'est pas déjà en cours de fabrication
+startFabrication() {
+  //console.log(this.product.vitesse);
+  if (this.estFabrique == false && this.product.quantite > 0) {
+    this.estFabrique = true;
     this.lastupdate = Date.now();
     this.product.timeleft = this.product.vitesse;
-    setInterval(() => { this.calcScore(); }, 100);
   }
+}
 
-  calcScore(){
-    if(this.product.timeleft == 0 && this.product.managerUnlocked){
-      this.startFabrication();
+// Pour un produit et en fonction du temps écoulé depuis la dernière fois, on décrémente le temps restant de production du produit.
+// Si ce temps devient négatif ou nul, on ajoute l’argent généré au score et efface la barre de production.
+calcScore() {
+  // Si le manager est acheté, on lance la production
+  if (this.product.timeleft == 0 && this.product.managerUnlocked) {
+    this.startFabrication();
+  }
+  // Le produit est en production, on calcule le nouveau timeleft
+  if (this.product.timeleft != 0) {
+    this.product.timeleft = this.product.timeleft - (Date.now() - this.lastupdate);
+    this.lastupdate = Date.now();
+    // Le temps est écoulé, on ajoute le produit et remet sa barre et son temps à 0
+    if (this.product.timeleft <= 0) {
+      this.product.timeleft = 0;
+      this.progressbarvalue = 0;
+      this.notifyProduction.emit(this.product);
+      //this.service.putProduit(this.product);
+      this.estFabrique = false;
     }
-    if (this.product.timeleft != 0 ){
-      this.product.timeleft = this.product.timeleft - (Date.now() - this.lastupdate);
-      this.lastupdate = Date.now();
-      if (this.product.timeleft<=0){
-        this.product.timeleft = 0;
-        this.progressbarvalue = 0;
-        this.notifyProduction.emit(this.product);
-      }
-      else {
-        this.progressbarvalue = ((this.product.vitesse - this.product.timeleft) / this.product.vitesse) * 100;
-      }
+    // On calcule la nouvelle valeur de la barre de progression
+    else {
+      this.progressbarvalue = ((this.product.vitesse - this.product.timeleft) / this.product.vitesse) * 100;
     }
   }
+}
 
-  //Calcule le maximum de produit que l'on peut acheter avec l'argent
-  calcMaxCanBuy() : number{
-    let qtmax : number = 0;
-    if (this.product.cout * this.product.croissance <= this._money) {
-      let qt = (Math.log((this.product.cout - (this._money * (1 - this.product.croissance))) / this.product.cout)) / Math.log(this.product.croissance);
-      qtmax = Math.floor(qt);
-      if (qtmax < 0) {
+// On calcule le maximum de produit que l'on peut acheter avec l'argent
+calcMaxCanBuy(): number {
+  let qtmax: number = 0;
+  if (this.product.cout * this.product.croissance <= this._money) {
+    let qt = (Math.log((this.product.cout - (this._money * (1 - this.product.croissance))) / this.product.cout)) / Math.log(this.product.croissance);
+    qtmax = Math.floor(qt);
+    if (qtmax < 0) {
       qtmax = 0;
-      }
+    }
   }
   return qtmax;
 }
 
-// Achète le produit 
-buyProduct(){
+// On achète le produit 
+buyProduct() {
   this.coutBuy = this._qtmulti * this.product.cout;
-  this.product.cout = Math.round(this.product.cout * this.product.croissance ** this._qtmulti*100)/100;
-  this.product.revenu = (this.product.revenu / this.product.quantite) * (this.product.quantite + this._qtmulti);
+  this.product.cout = Math.round(this.product.cout * this.product.croissance ** this._qtmulti * 100) / 100;
   this.product.quantite = this.product.quantite + this._qtmulti;
   this.onBuy.emit(this.coutBuy);
-  this.service.putProduit(this.product);
+
+
+  // Les unlocks 
+  this.product.palliers.pallier.forEach(element =>{
+     if (this.product.quantite > element.seuil && element.unlocked == false){
+      this.calcUpgrade(element); 
+      this.product.palliers.pallier[this.product.palliers.pallier.indexOf(element)].unlocked = true;
+      this.popMessage(element.name + " obtenu !");
+     }
+  })
 }
+
+calcUpgrade(pallier : Pallier){
+  if (pallier.typeratio == "vitesse"){
+    this.product.vitesse = this.product.vitesse / pallier.ratio;
+  }
+  if (pallier.typeratio == "gain"){
+    this.product.revenu = this.product.revenu * pallier.ratio;
+  }
+}
+
+popMessage(message: string): void {
+  this.snackBar.open(message, "", { duration: 2000 })
+}
+
 }
