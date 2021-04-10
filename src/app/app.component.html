@@ -5,9 +5,9 @@
   </div>
   <div class="money">$<span [innerHTML]="world.money | bigvalue"> </span></div>
   <div>
-    <button type="button" id="buttonBuy" *ngIf="qtmulti!=1000" (click)="changeQuantity()"><span>Buy
+    <button type="button" id="b" *ngIf="qtmulti!=1000" (click)="changeQuantity()"><span>Buy
         x</span><span>{{qtmulti}}</span></button>
-    <button type="button" id="buttonBuy" *ngIf="qtmulti==1000" (click)="changeQuantity()"><span>Buy
+    <button type="button" id="b" *ngIf="qtmulti==1000" (click)="changeQuantity()"><span>Buy
       </span><span>max</span></button>
   </div>
   <div>Votre ID<input type="text" [(ngModel)]="username" (change)="onUsernameChanged()" /></div>
@@ -16,12 +16,10 @@
 <div class="main">
   <div class=listebouton>
     <ul style="list-style-type:none;">
-      <li><button type="button" id="b" color="primary"
-        (click)="showUnlocks = true"> Unlocks</button></li>
+      <li><button type="button" id="b" color="primary" (click)="showUnlocks = true"> Unlocks</button></li>
       <li><button type="button" id="b" color="primary" [matBadge]="badgeUpgrades" [matBadgeHidden]="badgeUpgrades==0"
           (click)="showUpgrades = true">Cash Upgrades</button></li>
-      <li><button type="button" id="b"color="primary"
-        (click)="showAngels = true">Angel Upgrades</button></li>
+      <li><button type="button" id="b" color="primary" (click)="showAngels = true">Angel Upgrades</button></li>
       <li><button type="button" id="b" color="primary" [matBadge]="badgeManagers" [matBadgeHidden]="badgeManagers==0"
           (click)="showManagers = true">Managers</button></li>
       <li><button type="button" id="b" color="primary" (click)="showInvestor = true">Investors</button></li>
@@ -60,7 +58,7 @@
   <div>
     <h1 class="title">Managers make you feel better !</h1>
   </div>
-  <div class = "gridmodal">
+  <div class="gridmodal">
     <div *ngFor="let manager of world.managers.pallier">
       <div *ngIf="!manager.unlocked" class="managerslayout">
         <div>
@@ -69,10 +67,10 @@
         <div>
           <div class="managername"> {{ manager.name}} </div>
           <div class="managercible"> S'occupe du produit : {{world.products.product[manager.idcible-1].name }} </div>
-          <div class="managercost"> {{ manager.seuil}} $</div>
+          <div class="managercost"> Il côute {{ manager.seuil}} $</div>
         </div>
         <div>
-          <button type="button" [disabled]=" manager.seuil > world.money" class="hirebutton"
+          <button id="buy" type="button" [disabled]=" manager.seuil > world.money" class="hirebutton"
             (click)="hireManager(manager)" [ngClass]="{'selectable' : (world.money >= manager.seuil)}">Hire !</button>
         </div>
       </div>
@@ -86,7 +84,7 @@
   <div>
     <h1 class="title">Want to maximize profits ? Get your investments to these quotas !</h1>
   </div>
-  <div class = "gridmodal">
+  <div class="gridmodal">
     <div *ngFor="let product of world.products.product">
       <div *ngFor="let unlock of product.palliers.pallier">
         <div *ngIf="!unlock.unlocked" class="unlockslayout">
@@ -95,23 +93,23 @@
           </div>
           <div>
             <div class="unlockname"> {{unlock.name}} </div>
-            <div class="unlockcost"> Il faut {{unlock.seuil}} produits </div>
-            <div class="unlockratio"> {{unlock.typeratio}} x {{unlock.ratio}}</div>
+            <div class="unlockratio"> Il permet {{unlock.typeratio}} x {{unlock.ratio}}</div>
+            <div class="unlockcost"> Pour le débloquer il faut {{unlock.seuil}} produits </div>
           </div>
         </div>
       </div>
     </div>
     <div *ngFor="let unlock of world.allunlocks.pallier">
-        <div *ngIf="!unlock.unlocked" class="unlockslayout">
-          <div>
-            <div class="logo"><img class="round" [attr.src]="server+unlock.logo" /> </div>
-          </div>
-          <div>
-            <div class="unlockname"> {{unlock.name}} </div>
-            <div class="unlockcost"> Il faut {{unlock.seuil}} pour chaque produits </div>
-            <div class="unlockratio"> {{unlock.typeratio}} x {{unlock.ratio}}</div>
-          </div>
+      <div *ngIf="!unlock.unlocked" class="unlockslayout">
+        <div>
+          <div class="logo"><img class="round" [attr.src]="server+unlock.logo" /> </div>
         </div>
+        <div>
+          <div class="unlockname"> {{unlock.name}} </div>
+          <div class="unlockratio"> Il permet {{unlock.typeratio}} x {{unlock.ratio}}</div>
+          <div class="unlockcost">  Pour le débloquer il faut {{unlock.seuil}} quantités de chaque produit </div>
+        </div>
+      </div>
     </div>
     <button id="b" mat-raisedbutton color="primary" (click)="showUnlocks = false">Close</button>
   </div>
@@ -122,7 +120,7 @@
   <div>
     <h1 class="title">Boost you investments !</h1>
   </div>
-  <div class = "gridmodal">
+  <div class="gridmodal">
     <div *ngFor="let upgrade of world.upgrades.pallier">
       <div *ngIf="!upgrade.unlocked" class="upgradeslayout">
         <div>
@@ -131,11 +129,11 @@
         <div>
           <div class="upgradename"> {{ upgrade.name}} </div>
           <div class="upgradecible"> Remplace le produit : {{world.products.product[upgrade.idcible-1].name }} </div>
-          <div class="upgradecost"> {{ upgrade.seuil}} $ </div>
-          <div class="unlockratio"> {{upgrade.typeratio}} x {{upgrade.ratio}}</div>
+          <div class="unlockratio"> Il permet d'avoir {{upgrade.typeratio}} x {{upgrade.ratio}}</div>
+          <div class="upgradecost"> Il coûte {{ upgrade.seuil}} $ </div>
         </div>
         <div>
-          <button type="button" [disabled]=" upgrade.seuil > world.money" class="buybutton"
+          <button type="button" id="buy" [disabled]=" upgrade.seuil > world.money" class="buybutton"
             (click)="buyUpgrade(upgrade)" [ngClass]="{'selectable' : (world.money >= upgrade.seuil)}">Buy !</button>
         </div>
       </div>
@@ -149,12 +147,13 @@
   <div>
     <h1 class="title">Angel Investors</h1>
   </div>
-    <div class = "gridmodal">
-          <div class="investortotal"> {{world.totalangels}} Total Angels </div>
-          <div>
-            <button type="button" [disabled]="world.activeangels == 0" class="claimAngel" (click) = "claimAngel()">  {{world.activeangels}} angels to claim with restart</button>
-          </div>
-          <div class="investorbonus">{{ world.angelbonus}}% </div>   
+  <div class="gridmodal">
+    <div class="investortotal"> {{world.totalangels}} Total Angels </div>
+    <div>
+      <button type="button" id="buy" [disabled]="world.activeangels == 0" class="claimAngel" (click)="claimAngel()">
+        {{world.activeangels}} angels to claim with restart</button>
+    </div>
+    <div class="investorbonus">{{ world.angelbonus}}% </div>
     <button id="b" mat-raisedbutton color="primary" (click)="showInvestor = false">Close</button>
   </div>
 </div>
@@ -172,11 +171,11 @@
         </div>
         <div>
           <div class="angelname"> {{ angel.name}} </div>
-          <div class="angeltyperatio"> {{angel.typeratio}} </div>
-          <div class="upgradecost"> {{ angel.seuil}} $ </div>
+          <div class="angeltyperatio"> Il permet d'avoir {{angel.typeratio}} x {{angel.ratio}} </div>
+          <div class="upgradecost"> Il coûte {{ angel.seuil}} $ </div>
         </div>
         <div>
-          <button type="button" [disabled]=" angel.seuil > world.activeangels" class="buybutton"
+          <button type="button" id="buy" [disabled]=" angel.seuil > world.activeangels" class="buybutton"
             (click)="buyAngel()">Buy !</button>
         </div>
       </div>
