@@ -78,7 +78,7 @@ export class AppComponent {
   onProductionDone(p: Product) {
     this.world.money = this.world.money + (p.revenu * p.quantite) * (1 + (this.world.activeangels * this.world.angelbonus / 100));
     this.world.score = this.world.score + (p.revenu * p.quantite) * (1 + (this.world.activeangels * this.world.angelbonus / 100));
-    this.world.totalangels = Math.round(this.world.totalangels + (150 * Math.sqrt(this.world.score / Math.pow(10, 15))));
+    this.world.activeangels = Math.round(this.world.totalangels + (150 * Math.sqrt(this.world.score / Math.pow(10, 15))));
     //this.service.putProduit(p);
     this.badgeManagersDispo();
     this.badgeUpgradesDispo();
