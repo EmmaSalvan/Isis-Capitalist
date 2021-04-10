@@ -20,10 +20,11 @@
         (click)="showUnlocks = true"> Unlocks</button></li>
       <li><button type="button" id="b" color="primary" [matBadge]="badgeUpgrades" [matBadgeHidden]="badgeUpgrades==0"
           (click)="showUpgrades = true">Cash Upgrades</button></li>
-      <li><button type="button" id="b">Angel Upgrades</button></li>
+      <li><button type="button" id="b"color="primary"
+        (click)="showAngels = true">Angel Upgrades</button></li>
       <li><button type="button" id="b" color="primary" [matBadge]="badgeManagers" [matBadgeHidden]="badgeManagers==0"
           (click)="showManagers = true">Managers</button></li>
-      <li><button type="button" id="b">Investors</button></li>
+      <li><button type="button" id="b" color="primary" (click)="showInvestor = true">Investors</button></li>
     </ul>
   </div>
   <div class="product">
@@ -54,11 +55,12 @@
   </div>
 </div>
 
+<!--Modal des managers -->
 <div *ngIf="showManagers == true" class="modal">
   <div>
     <h1 class="title">Managers make you feel better !</h1>
   </div>
-  <div>
+  <div class = "gridmodal">
     <div *ngFor="let manager of world.managers.pallier">
       <div *ngIf="!manager.unlocked" class="managerslayout">
         <div>
@@ -75,15 +77,16 @@
         </div>
       </div>
     </div>
-    <button class="closebutton" mat-raisedbutton color="primary" (click)="showManagers = false">Close</button>
+    <button id="b" mat-raisedbutton color="primary" (click)="showManagers = false">Close</button>
   </div>
 </div>
 
+<!--Modal des Unlocks -->
 <div *ngIf="showUnlocks == true" class="modal">
   <div>
     <h1 class="title">Want to maximize profits ? Get your investments to these quotas !</h1>
   </div>
-  <div>
+  <div class = "gridmodal">
     <div *ngFor="let product of world.products.product">
       <div *ngFor="let unlock of product.palliers.pallier">
         <div *ngIf="!unlock.unlocked" class="unlockslayout">
@@ -110,15 +113,16 @@
           </div>
         </div>
     </div>
-    <button class="closebutton" mat-raisedbutton color="primary" (click)="showUnlocks = false">Close</button>
+    <button id="b" mat-raisedbutton color="primary" (click)="showUnlocks = false">Close</button>
   </div>
 </div>
 
+<!--Modal des Upgrades -->
 <div *ngIf="showUpgrades == true" class="modal">
   <div>
     <h1 class="title">Boost you investments !</h1>
   </div>
-  <div>
+  <div class = "gridmodal">
     <div *ngFor="let upgrade of world.upgrades.pallier">
       <div *ngIf="!upgrade.unlocked" class="upgradeslayout">
         <div>
@@ -136,7 +140,48 @@
         </div>
       </div>
     </div>
-    <button class="closebutton" mat-raisedbutton color="primary" (click)="showUpgrades = false">Close</button>
+    <button id="b" mat-raisedbutton color="primary" (click)="showUpgrades = false">Close</button>
+  </div>
+</div>
+
+<!--Modal des Investors -->
+<div *ngIf="showInvestor == true" class="modalInvestor">
+  <div>
+    <h1 class="title">Angel Investors</h1>
+  </div>
+    <div class = "gridmodal">
+          <div class="investortotal"> {{world.totalangels}} Total Angels </div>
+          <div>
+            <button type="button" [disabled]="world.activeangels == 0" class="claimAngel" (click) = "claimAngel()">  {{world.activeangels}} angels to claim with restart</button>
+          </div>
+          <div class="investorbonus">{{ world.angelbonus}}% </div>   
+    <button id="b" mat-raisedbutton color="primary" (click)="showInvestor = false">Close</button>
+  </div>
+</div>
+
+<!--Modal des Angels -->
+<div *ngIf="showAngels == true" class="modal">
+  <div>
+    <h1 class="title">Spend your Angels Wisely !</h1>
+  </div>
+  <div>
+    <div *ngFor="let angel of world.angelupgrades.pallier">
+      <div *ngIf="!angel.unlocked" class="upgradeslayout">
+        <div>
+          <div class="logo"><img class="round" [attr.src]="server+angel.logo" /> </div>
+        </div>
+        <div>
+          <div class="angelname"> {{ angel.name}} </div>
+          <div class="angeltyperatio"> {{angel.typeratio}} </div>
+          <div class="upgradecost"> {{ angel.seuil}} $ </div>
+        </div>
+        <div>
+          <button type="button" [disabled]=" angel.seuil > world.activeangels" class="buybutton"
+            (click)="buyAngel()">Buy !</button>
+        </div>
+      </div>
+    </div>
+    <button id="b" mat-raisedbutton color="primary" (click)="showAngels = false">Close</button>
   </div>
 </div>
 

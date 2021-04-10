@@ -15,11 +15,17 @@
     z-index: 1;
 }
 .foot{
-    position:absolute;
     bottom:0;
+    right:0;
+    left:0;
+    position: fixed;
     width:100%;
-    padding-top:50px;
-    height:50px;
+    height:40px;
+    padding-top: 5px;
+    background-color: #03224c;
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-align : right;
 }
 
 #b{
@@ -62,4 +68,21 @@
     border: solid;
     top:10; /* a 10% du haut */
     left:20%; /* a 20% de la gauche */
+}
+
+.gridmodal{
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.modalInvestor{
+    position: absolute; /* reste en place */
+    z-index: 2; /* au dessus du reste */
+    width: 800px; /* largeur */
+    height: 200px; /* hauteur */
+    background-color: white; /* opaque */
+    border: solid;
+    top:10; /* a 10% du haut */
+    left:20%; /* a 20% de la gauche */
+
 }

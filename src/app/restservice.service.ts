@@ -72,4 +72,12 @@ export class RestserviceService {
       .toPromise()
       .catch(this.handleError);
   }
+
+  public deleteWorld(): Promise<Response> {
+    return this.http.delete(this.server + "generic/world", {
+        headers: this.setHeaders(this.getUser())
+      })
+      .toPromise().then(response => response)
+      .catch(this.handleError);
+  }
 }

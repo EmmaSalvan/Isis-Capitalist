@@ -26,6 +26,8 @@ export class AppComponent {
   badgeUpgrades: number = 0;
   showManagers: boolean = false;
   showUpgrades: boolean = false;
+  showInvestor: boolean = false;
+  showAngels: boolean = false;
   showUnlocks: boolean = false;
   qtmax: number = 0;
   qtmin: number = 0;
@@ -74,8 +76,9 @@ export class AppComponent {
 
   // On met a jour le score et l'argent du monde après la production d'un produit
   onProductionDone(p: Product) {
-    this.world.money = this.world.money + (p.revenu * p.quantite);
-    this.world.score = this.world.score + (p.revenu * p.quantite);
+    this.world.money = this.world.money + (p.revenu * p.quantite) * (1 + (this.world.activeangels * this.world.angelbonus / 100));
+    this.world.score = this.world.score + (p.revenu * p.quantite) * (1 + (this.world.activeangels * this.world.angelbonus / 100));
+    this.world.totalangels = Math.round(this.world.totalangels + (150 * Math.sqrt(this.world.score / Math.pow(10, 15))));
     //this.service.putProduit(p);
     this.badgeManagersDispo();
     this.badgeUpgradesDispo();
@@ -174,5 +177,16 @@ export class AppComponent {
       }
     })
   }
+
+//On supprime le monde et on met à jour la page
+  claimAngel(): void{
+   this.service.deleteWorld();
+   window.location.reload();
+  }
+
+//On dépense des anges
+buyAngel(){
+
+}
 }
 
