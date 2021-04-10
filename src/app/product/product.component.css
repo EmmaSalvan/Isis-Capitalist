@@ -21,7 +21,19 @@ button {
     padding: 5px;
     width: wrap-content;
     margin: 5px;
+    
 }
+
+button:hover
+{
+box-shadow:5px 3px #ccc;
+}
+
+button:disabled
+{
+background-color: whitesmoke;
+}
+
 
 .progressbar {
     color: #FFEA82;

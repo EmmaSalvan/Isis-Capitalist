@@ -73,10 +73,26 @@ export class RestserviceService {
       .catch(this.handleError);
   }
 
+  public putAllUnlocks(allunlock: Pallier): Promise<Response> {
+    return this.http.put(this.server + "adventureisis/generic/allunlock", allunlock, {
+      headers: this.setHeaders(this.user)
+    })
+      .toPromise()
+      .catch(this.handleError);
+  }
+
+  public putWorld(world: World): Promise<Response> {
+    return this.http.put(this.server + "adventureisis/generic/world", world, {
+      headers: this.setHeaders(this.user)
+    })
+      .toPromise()
+      .catch(this.handleError);
+  }
+
   public deleteWorld(): Promise<Response> {
-    return this.http.delete(this.server + "generic/world", {
-        headers: this.setHeaders(this.getUser())
-      })
+    return this.http.delete(this.server + "adventureisis/generic/world", {
+      headers: this.setHeaders(this.user)
+    })
       .toPromise().then(response => response)
       .catch(this.handleError);
   }
