@@ -89,8 +89,17 @@ export class RestserviceService {
       .catch(this.handleError);
   }
 
+
   public deleteWorld(): Promise<Response> {
     return this.http.delete(this.server + "adventureisis/generic/world", {
+      headers: this.setHeaders(this.user)
+    })
+      .toPromise().then(response => response)
+      .catch(this.handleError);
+  }
+
+  public putAngel(angel: Pallier): Promise<Response> {
+    return this.http.put(this.server + "adventureisis/generic/angel", angel, {
       headers: this.setHeaders(this.user)
     })
       .toPromise().then(response => response)

@@ -65,7 +65,7 @@ export class ProductComponent implements OnInit {
       if (this._qtmulti == 1000) {
         this._qtmulti = this.qtmax;
       }
-    }, 1000);
+    }, 100);
   }
 
   // On commence la fabrication d'un produit (s'il n'est pas déjà en cours de fabrication)
@@ -91,7 +91,6 @@ export class ProductComponent implements OnInit {
       this.startFabrication();
     }
     // Le produit est en production, on calcule le nouveau timeleft
-    console.log(this.product.name, this.product.timeleft);
     if (this.product.timeleft != 0) {
       this.product.timeleft = this.product.timeleft - (Date.now() - this.lastupdate);
       this.lastupdate = Date.now();

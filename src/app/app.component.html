@@ -133,7 +133,7 @@
           <div class="upgradecost"> Il coûte {{ upgrade.seuil}} $ </div>
         </div>
         <div>
-          <button type="button" id="buy" [disabled]=" upgrade.seuil > world.money" class="buybutton"
+          <button type="button" id="buy" [disabled]=" upgrade.seuil >= world.money" class="buybutton"
             (click)="buyUpgrade(upgrade)" [ngClass]="{'selectable' : (world.money >= upgrade.seuil)}">Buy !</button>
         </div>
       </div>
@@ -153,7 +153,7 @@
       <button type="button" id="buy" [disabled]="world.activeangels == 0" class="claimAngel" (click)="claimAngel()">
         {{world.activeangels}} angels to claim with restart</button>
     </div>
-    <div class="investorbonus">{{ world.angelbonus}}% </div>
+    <div class="investorbonus"> {{world.angelbonus}}% de bonus par Ange </div>
     <button id="b" mat-raisedbutton color="primary" (click)="showInvestor = false">Close</button>
   </div>
 </div>
@@ -167,22 +167,24 @@
     <div *ngFor="let angel of world.angelupgrades.pallier">
       <div *ngIf="!angel.unlocked" class="upgradeslayout">
         <div>
-          <div class="logo"><img class="round" [attr.src]="server+angel.logo" /> </div>
+          <div class="logo"><img class="round" [attr.src]="server+angel.logo"/> </div>
         </div>
         <div>
           <div class="angelname"> {{ angel.name}} </div>
           <div class="angeltyperatio"> Il permet d'avoir {{angel.typeratio}} x {{angel.ratio}} </div>
-          <div class="upgradecost"> Il coûte {{ angel.seuil}} $ </div>
+          <div class="upgradecost"> Il coûte {{ angel.seuil}} angels </div>
         </div>
         <div>
-          <button type="button" id="buy" [disabled]=" angel.seuil > world.activeangels" class="buybutton"
-            (click)="buyAngel()">Buy !</button>
+          <button type="button" id="buy" [disabled]=" world.activeangels > angel.seuil " class="buybutton"
+            (click)="buyAngel(angel)">Buy !</button>
         </div>
       </div>
     </div>
     <button id="b" mat-raisedbutton color="primary" (click)="showAngels = false">Close</button>
   </div>
 </div>
+
+
 
 
 <footer class="foot">

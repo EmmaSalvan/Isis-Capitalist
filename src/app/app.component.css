@@ -92,13 +92,14 @@
 #buy {
     display: inline-block;
     border-radius: 10px;
-    color: #03224c;
+    color: white;
     text-align: center;
     font-size: 15px;
     font-family: Georgia, 'Times New Roman', Times, serif;
     padding: 5px;
     width: wrap-content;
     margin: 5px;
+    background-color: #03224c;
 }
 
 #buy:hover
@@ -108,5 +109,6 @@ box-shadow:5px 3px #ccc;
 
 #buy:disabled
 {
-background-color: whitesmoke;
+    color: #03224c;
+    background-color: whitesmoke;
 }

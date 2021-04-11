@@ -3,6 +3,7 @@ import { QueryList } from '@angular/core';
 import { Component } from '@angular/core';
 import { MatBadge } from '@angular/material/badge';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { element } from 'protractor';
 import { ProductComponent } from './product/product.component';
 import { RestserviceService } from './restservice.service';
 import { World, Product, Pallier } from './world';
@@ -48,8 +49,8 @@ export class AppComponent {
   ngOnInit(): void {
     setInterval(() => {
       this.allUnlocks();
-      console.log(this.world.money);
-    }, 1000);
+      this.world.activeangels =  Math.round(150 * Math.sqrt(this.world.score / Math.pow(10, 15)));
+    }, 100);
   }
 
   // On crée le pseudo du joueur s'il n'est pas spécifié et on le transmet au serveur 
@@ -81,7 +82,7 @@ export class AppComponent {
   onProductionDone(p: Product) {
     this.world.money = this.world.money + (p.revenu * p.quantite) * (1 + (this.world.activeangels * this.world.angelbonus / 100));
     this.world.score = this.world.score + (p.revenu * p.quantite) * (1 + (this.world.activeangels * this.world.angelbonus / 100));
-    this.world.activeangels =  Math.round(50 * Math.sqrt(this.world.score / Math.pow(10, 15)) - this.world.totalangels * 100) /100;
+    
     //this.service.putProduit(p);
     this.badgeManagersDispo();
     this.badgeUpgradesDispo();
@@ -111,14 +112,13 @@ export class AppComponent {
 
     this.badgeManagersDispo();
     this.badgeUpgradesDispo();
-    this.badgeAngelsDispo();
   }
 
   // On modifie le nombre de bagdes (nombre de managers achetables)
   badgeManagersDispo(): void {
     this.badgeManagers = 0;
     this.world.managers.pallier.forEach(element => {
-      if (this.world.money > element.seuil && element.unlocked == false) {
+      if (this.world.money >= element.seuil && element.unlocked == false) {
         this.badgeManagers += 1;
       }
     });
@@ -128,7 +128,7 @@ export class AppComponent {
   badgeUpgradesDispo(): void {
     this.badgeUpgrades = 0;
     this.world.upgrades.pallier.forEach(element => {
-      if (this.world.money > element.seuil && element.unlocked == false) {
+      if (this.world.money >= element.seuil && element.unlocked == false) {
         this.badgeUpgrades += 1;
       }
     });
@@ -138,7 +138,7 @@ export class AppComponent {
   badgeAngelsDispo(): void {
     this.badgeAngels = 0;
     this.world.angelupgrades.pallier.forEach(element => {
-      if (this.world.activeangels > element.seuil && element.unlocked == false) {
+      if (this.world.totalangels >= element.seuil && element.unlocked == false) {
         this.badgeAngels += 1;
       }
     });
@@ -147,19 +147,24 @@ export class AppComponent {
   // On achète un manager 
   hireManager(manager: Pallier) {
     if (this.world.money >= manager.seuil) {
-      this.world.managers.pallier[this.world.managers.pallier.indexOf(manager)].unlocked = true;
       this.world.products.product.forEach(element => {
-        if (manager.idcible == element.id) {
+        if (manager.idcible == element.id ){ 
+          if(element.quantite > 0){
           this.world.products.product[this.world.products.product.indexOf(element)].managerUnlocked = true;
+          this.world.managers.pallier[this.world.managers.pallier.indexOf(manager)].unlocked = true;
+          this.world.money = this.world.money - manager.seuil;
+          this.popMessage(manager.name + " acheté!");
+          this.service.putManager(manager);
+          this.badgeManagersDispo();
+          this.badgeUpgradesDispo();
         }
-      });
-      this.world.money = this.world.money - manager.seuil;
-      this.popMessage(manager.name + " acheté!");
-      this.service.putManager(manager);
+        else{
+          this.popMessage("Tu dois d'abord acheter un " + element.name);
+        }
+      }
 
-      this.badgeManagersDispo();
-      this.badgeUpgradesDispo();
-      this.badgeAngelsDispo();
+      });
+        
     }
   }
 
@@ -174,7 +179,6 @@ export class AppComponent {
 
       this.badgeManagersDispo();
       this.badgeUpgradesDispo();
-      this.badgeAngelsDispo();
     }
   }
 
@@ -195,11 +199,30 @@ export class AppComponent {
   claimAngel(): void {
     this.service.deleteWorld();
     window.location.reload();
+
+    this.badgeAngelsDispo();
   }
 
   // On achète un ange
-  buyAngel() {
+  buyAngel(angel: Pallier) {
+    if (this.world.totalangels >= angel.seuil) {
+      this.world.totalangels =  this.world.totalangels - angel.seuil;
+      console.log(this.world.activeangels);
+      this.world.angelupgrades.pallier[this.world.angelupgrades.pallier.indexOf(angel)].unlocked = true;
+      if (angel.typeratio == "ange") {
+        this.world.money = this.world.money * angel.ratio + this.world.money;
+        this.world.score = this.world.score * angel.ratio + this.world.score;
+      }
+      else {
+        if (angel.typeratio = "gain") {
+          this.productsComponent.forEach(element => element.calcUpgrade(angel));
+        }
+      }
+      this.popMessage("Achat de l'angel " + angel.name + " de type " + angel.typeratio)
+      this.service.putAngel(angel);
 
+      this.badgeAngelsDispo();
+    }
   }
 }
 
